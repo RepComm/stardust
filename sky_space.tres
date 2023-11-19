@@ -1,0 +1,10 @@
+[gd_resource type="PhysicalSkyMaterial" format=3 uid="uid://clx7a63q85ws1"]
+
+[resource]
+rayleigh_coefficient = 0.0
+rayleigh_color = Color(0.788235, 0.466667, 0.698039, 1)
+mie_eccentricity = 0.99
+mie_color = Color(0.423529, 0.2, 0.137255, 1)
+turbidity = 117.14
+sun_disk_scale = 0.0
+energy_multiplier = 0.75

@@ -1,0 +1,69 @@
+[gd_scene load_steps=11 format=3 uid="uid://bfe2pbwggeisq"]
+
+[ext_resource type="Script" path="res://Chunk.cs" id="1_ecol7"]
+[ext_resource type="Script" path="res://pubmarine/Client.cs" id="1_jvg2v"]
+[ext_resource type="PackedScene" uid="uid://7oobiw2xxk0s" path="res://models/basic.blend" id="2_mvw6y"]
+[ext_resource type="PackedScene" uid="uid://drer00plj75n7" path="res://models/basic_stair.blend" id="3_xoahc"]
+[ext_resource type="PackedScene" uid="uid://b8xf8qmb5npc2" path="res://models/floor-grate.blend" id="4_s70jv"]
+[ext_resource type="Material" uid="uid://clx7a63q85ws1" path="res://sky_space.tres" id="5_8ow6q"]
+[ext_resource type="PackedScene" uid="uid://cbpfcyr742iw2" path="res://models/stars.blend" id="5_id6vo"]
+[ext_resource type="PackedScene" uid="uid://87l70it7yjie" path="res://models/hanger.blend" id="8_g4pkg"]
+
+[sub_resource type="Sky" id="Sky_ehtyx"]
+sky_material = ExtResource("5_8ow6q")
+
+[sub_resource type="Environment" id="Environment_bx7ww"]
+background_mode = 2
+background_energy_multiplier = 1.22
+sky = SubResource("Sky_ehtyx")
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 2.18
+reflected_light_source = 1
+fog_density = 0.0247
+fog_height = 1.0
+
+[node name="Scene" type="Node3D"]
+script = ExtResource("1_jvg2v")
+
+[node name="Chunk" type="Node3D" parent="."]
+script = ExtResource("1_ecol7")
+
+[node name="basic" parent="Chunk" instance=ExtResource("2_mvw6y")]
+visible = false
+
+[node name="floor-grate" parent="Chunk" instance=ExtResource("4_s70jv")]
+visible = false
+
+[node name="basic_stair" parent="Chunk" instance=ExtResource("3_xoahc")]
+visible = false
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(-0.858949, -0.1283, -0.495728, 0.00870813, 0.964302, -0.264661, 0.511988, -0.231647, -0.827169, -1.48626, 1.6934, -3.35264)
+fov = 80.0
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.651825, -0.679544, 0.336667, 0.753946, -0.532786, 0.384324, -0.0817937, 0.50434, 0.859622, 0, 1.60542, 0)
+light_energy = 2.714
+light_indirect_energy = 0.0
+light_volumetric_fog_energy = 0.0
+
+[node name="stars" parent="DirectionalLight3D" instance=ExtResource("5_id6vo")]
+transform = Transform3D(0.365518, 0.626039, 0.688819, 0.812359, -0.575813, 0.0922588, 0.454389, 0.525846, -0.719039, 1.23219, -1.03619, -0.798886)
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_bx7ww")
+
+[node name="hanger" parent="." instance=ExtResource("8_g4pkg")]
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.41408, 8.52341, 0)
+light_energy = 4.556
+omni_range = 8.565
+omni_attenuation = 0.0603712
+
+[node name="OmniLight3D2" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.52668, 8.52341, 0)
+light_energy = 4.556
+omni_range = 8.565
+omni_attenuation = 0.0603712
