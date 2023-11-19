@@ -10,6 +10,6 @@ It was surprisingly easy to get voxel meshes to build, so I'm deciding to contin
 - ChunkData - generic voxel storage data structure
 - Chunk - renderable, uses Godot API and ChunkData to render blocks
   - needs hidden face marking/culling, UVs, materials, raycast picking
-- pubmarine/client - connects to a (pubmarine)[github.com/repcomm/pubmarine] server
+- pubmarine/client - connects to a [pubmarine server](https://github.com/repcomm/pubmarine)
   - needs JSON and protocol handling, but does connect
 - some basic 3d models for blocks and a space hanger
