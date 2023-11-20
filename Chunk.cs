@@ -2,44 +2,43 @@
 using Godot;
 using Godot.Collections;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using Vector3 = Godot.Vector3;
 
-public partial class Chunk : Node3D
-{
+public partial class Chunk : Node3D {
 
   Array<MeshInstance3D> blockMeshes;
 
   ChunkData data = new ChunkData();
 
   MeshInstance3D meshChild = new();
-  RigidBody3D rigidBody;
+  // RigidBody3D rigidBody;
 
   Array<CollisionShape3D> colliders = new();
 
-  public override void _Ready()
-  {
-    this.rigidBody = GetParent<RigidBody3D>();
-    if (this.rigidBody is not RigidBody3D) {
-      throw new Exception("Chunk.GetParent did not return a RigidBody3D..");
-    }
+  Ship ship;
+
+  public override void _Ready() {
+    this.ship = GetParent<Ship>();
+    // this.rigidBody = GetParent<RigidBody3D>();
+    // if (this.rigidBody is not RigidBody3D) {
+    //   throw new Exception("Chunk.GetParent did not return a RigidBody3D..");
+    // }
 
     Material mat = GD.Load<Material>("res://voxels.tres");
     this.meshChild.MaterialOverride = mat;
 
     this.blockMeshes = GetChildMeshes();
 
-    foreach (var mesh in blockMeshes)
-    {
+    foreach (var mesh in blockMeshes) {
       GD.Print("Block mesh", mesh.Name);
     }
 
     Vector3 v = new();
-    for (int x = 0; x < data.dimensionSize; x++)
-    {
-      for (int y = 0; y < data.dimensionSize; y++)
-      {
+    for (int x = 0; x < data.dimensionSize; x++) {
+      for (int y = 0; y < data.dimensionSize; y++) {
         v.X = x;
         v.Y = 1;
         v.Z = y;
@@ -67,17 +66,17 @@ public partial class Chunk : Node3D
     data.writeBlockAtPos(max,0,max);
     data.writeBlockAtPos(0,0,max);
     
-    data.readBlockData[0] = 1;
-    for (int x = 0; x < data.dimensionSize; x++)
-    {
-      for (int y = 1; y < data.dimensionSize; y++)
-      {
-        v.X = data.dimensionSize - 1;
-        v.Y = y;
-        v.Z = x;
-        data.writeBlockAtPos(v);
-      }
-    }
+    // data.readBlockData[0] = 1;
+    // for (int x = 0; x < data.dimensionSize; x++)
+    // {
+    //   for (int y = 1; y < data.dimensionSize; y++)
+    //   {
+    //     v.X = data.dimensionSize - 1;
+    //     v.Y = y;
+    //     v.Z = x;
+    //     data.writeBlockAtPos(v);
+    //   }
+    // }
 
     //clear the existing dynamic mesh data
     this.clearMesh();
@@ -101,11 +100,9 @@ public partial class Chunk : Node3D
 
   public void generateCollisionMesh () {
     var pos = new Vector3();
-    for (int x = 0; x < this.data.dimensionSize; x++)
-    {
-      for (int y = 0; y < this.data.dimensionSize; y++)
-      {
-        for (int z = 0; z < this.data.dimensionSize; z++){
+    for (int x = 0; x < this.data.dimensionSize; x++) {
+      for (int y = 0; y < this.data.dimensionSize; y++) {
+        for (int z = 0; z < this.data.dimensionSize; z++) {
           pos.X = x;
           pos.Y = y;
           pos.Z = z;
@@ -135,15 +132,12 @@ public partial class Chunk : Node3D
     }
   }
 
-  public void generateMesh()
-  {
+  public void generateMesh() {
+    this.ship.clearThrusters();
     var pos = new Vector3();
-    for (int x = 0; x < this.data.dimensionSize; x++)
-    {
-      for (int y = 0; y < this.data.dimensionSize; y++)
-      {
-        for (int z = 0; z < this.data.dimensionSize; z++)
-        {
+    for (int x = 0; x < this.data.dimensionSize; x++) {
+      for (int y = 0; y < this.data.dimensionSize; y++) {
+        for (int z = 0; z < this.data.dimensionSize; z++) {
           pos.X = x;
           pos.Y = y;
           pos.Z = z;
@@ -157,6 +151,12 @@ public partial class Chunk : Node3D
               mesh,
               pos
             );
+          }
+          if (blockType == 4) {
+            var thruster = this.ship.createThruster();
+            thruster.position.X = pos.X;
+            thruster.position.Y = pos.Y;
+            thruster.position.Z = pos.Z;
           }
 
         }
@@ -172,7 +172,7 @@ public partial class Chunk : Node3D
   public void clearCollisionMesh () {
     foreach (var col in this.colliders) {
       // rigidBody.RemoveChild(col);
-      rigidBody.CallDeferred(RigidBody3D.MethodName.RemoveChild, col);
+      this.ship.CallDeferred(RigidBody3D.MethodName.RemoveChild, col);
     }
     this.colliders.Clear();
   }
@@ -180,7 +180,7 @@ public partial class Chunk : Node3D
   public void assignCollisionMesh () {
     foreach (var col in this.colliders) {
       // rigidBody.AddChild(col);
-      rigidBody.CallDeferred(RigidBody3D.MethodName.AddChild, col);
+      this.ship.CallDeferred(RigidBody3D.MethodName.AddChild, col);
     }
   }
 
