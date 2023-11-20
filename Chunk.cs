@@ -41,7 +41,7 @@ public partial class Chunk : Node3D
       for (int y = 0; y < data.dimensionSize; y++)
       {
         v.X = x;
-        v.Y = 0;
+        v.Y = 1;
         v.Z = y;
         if (
           (x == 0 ||
@@ -60,6 +60,13 @@ public partial class Chunk : Node3D
       }
     }
 
+    data.readBlockData[0] = 4;
+    var max = data.dimensionSize-1;
+    data.writeBlockAtPos(0,0,0);
+    data.writeBlockAtPos(max,0,0);
+    data.writeBlockAtPos(max,0,max);
+    data.writeBlockAtPos(0,0,max);
+    
     data.readBlockData[0] = 1;
     for (int x = 0; x < data.dimensionSize; x++)
     {
@@ -115,6 +122,10 @@ public partial class Chunk : Node3D
             var boxCollider = new CollisionShape3D();
             boxCollider.Shape = box;
             this.colliders.Add(boxCollider);
+            pos.X += 0.5f;
+            pos.Y += 0.5f;
+            pos.Z += 0.5f;
+
             boxCollider.Position = pos + aabb.Position;
 
           }

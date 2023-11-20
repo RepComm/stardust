@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bfe2pbwggeisq"]
+[gd_scene load_steps=14 format=3 uid="uid://bfe2pbwggeisq"]
 
 [ext_resource type="Script" path="res://Chunk.cs" id="1_ecol7"]
 [ext_resource type="Script" path="res://pubmarine/Client.cs" id="1_jvg2v"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://b8xf8qmb5npc2" path="res://models/floor-grate.blend" id="4_s70jv"]
 [ext_resource type="Material" uid="uid://clx7a63q85ws1" path="res://sky_space.tres" id="5_8ow6q"]
 [ext_resource type="PackedScene" uid="uid://cbpfcyr742iw2" path="res://models/stars.blend" id="5_id6vo"]
+[ext_resource type="PackedScene" uid="uid://yx6ebt2adse1" path="res://models/nozel.blend" id="6_33lgy"]
 [ext_resource type="PackedScene" uid="uid://87l70it7yjie" path="res://models/hanger.blend" id="8_g4pkg"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_vjddc"]
@@ -50,6 +51,9 @@ visible = false
 [node name="basic_stair" parent="Ship/Chunk" instance=ExtResource("3_xoahc")]
 visible = false
 
+[node name="nozel" parent="Ship/Chunk" instance=ExtResource("6_33lgy")]
+visible = false
+
 [node name="InitialCollider" type="CollisionShape3D" parent="Ship"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, 0.5)
 shape = SubResource("BoxShape3D_vjddc")
@@ -82,7 +86,7 @@ shape = SubResource("BoxShape3D_npo6g")
 environment = SubResource("Environment_bx7ww")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="env"]
-transform = Transform3D(-0.651825, -0.679544, 0.336666, 0.753946, -0.532786, 0.384324, -0.0817937, 0.50434, 0.859623, 0, 1.60542, 0)
+transform = Transform3D(-0.143366, 0.0155021, 0.989548, 0.820902, -0.556619, 0.127653, 0.55278, 0.830624, 0.0670747, 0, 1.60542, 0)
 light_energy = 2.714
 light_indirect_energy = 0.0
 light_volumetric_fog_energy = 0.0

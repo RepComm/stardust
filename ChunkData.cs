@@ -39,10 +39,18 @@ public class ChunkData {
   }
 
   public int posToIdx(Vector3 v) {
-    return (int)(
-      Math.Floor(v.X) +
-      Math.Floor(v.Y) * this.dimensionSize +
-      Math.Floor(v.Z) * this.dimensionSize * this.dimensionSize
+    return posToIdx((int)v.X, (int)v.Y, (int)v.Z);
+    // return (int)(
+    //   Math.Floor(v.X) +
+    //   Math.Floor(v.Y) * this.dimensionSize +
+    //   Math.Floor(v.Z) * this.dimensionSize * this.dimensionSize
+    // );
+  }
+  public int posToIdx(int x, int y, int z) {
+    return (
+      x +
+      y * this.dimensionSize +
+      z * this.dimensionSize * this.dimensionSize
     );
   }
 
@@ -89,6 +97,10 @@ public class ChunkData {
   public void writeBlockAtPos (Vector3 pos) {
     int idx = this.posToIdx(pos);
     // GD.Print("V", pos, "->",idx);
+    this.writeBlockAtIndex(idx);
+  }
+  public void writeBlockAtPos (int x, int y, int z) {
+    int idx = this.posToIdx(x,y,z);
     this.writeBlockAtIndex(idx);
   }
 
