@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://bfe2pbwggeisq"]
+[gd_scene load_steps=19 format=3 uid="uid://bfe2pbwggeisq"]
 
 [ext_resource type="Script" path="res://Chunk.cs" id="1_ecol7"]
 [ext_resource type="Script" path="res://pubmarine/Client.cs" id="1_jvg2v"]
@@ -9,11 +9,19 @@
 [ext_resource type="PackedScene" uid="uid://cbpfcyr742iw2" path="res://models/stars.blend" id="5_id6vo"]
 [ext_resource type="PackedScene" uid="uid://yx6ebt2adse1" path="res://models/nozel.blend" id="6_33lgy"]
 [ext_resource type="PackedScene" uid="uid://87l70it7yjie" path="res://models/hanger.blend" id="8_g4pkg"]
+[ext_resource type="Script" path="res://Stars.cs" id="10_1wpiq"]
+[ext_resource type="Script" path="res://Player.cs" id="10_3heva"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_vjddc"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_jgu7q"]
+friction = 0.55
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_npo6g"]
 size = Vector3(24, 0.5, 24.049)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_xk2t1"]
+size = Vector3(2.82825, 0.0500481, 1)
 
 [sub_resource type="Sky" id="Sky_ehtyx"]
 sky_material = ExtResource("5_8ow6q")
@@ -29,12 +37,12 @@ reflected_light_source = 1
 fog_density = 0.0247
 fog_height = 1.0
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_06sc3"]
+radius = 0.4
+height = 1.5
+
 [node name="Scene" type="Node3D"]
 script = ExtResource("1_jvg2v")
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(-0.858949, -0.1283, -0.495728, 0.00870813, 0.964302, -0.264661, 0.511988, -0.231647, -0.827169, -1.48626, 1.6934, -3.35264)
-fov = 80.0
 
 [node name="Ship" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
@@ -75,10 +83,15 @@ omni_attenuation = 0.0603712
 [node name="hanger" parent="room" instance=ExtResource("8_g4pkg")]
 
 [node name="StaticBody" type="StaticBody3D" parent="room"]
+physics_material_override = SubResource("PhysicsMaterial_jgu7q")
 
 [node name="Floor" type="CollisionShape3D" parent="room/StaticBody"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 6)
 shape = SubResource("BoxShape3D_npo6g")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="room/StaticBody"]
+transform = Transform3D(0.716339, -0.697753, 0, 0.697753, 0.716339, 0, 0, 0, 1, -1.02272, 0.957438, -0.499639)
+shape = SubResource("BoxShape3D_xk2t1")
 
 [node name="env" type="Node" parent="."]
 
@@ -93,3 +106,25 @@ light_volumetric_fog_energy = 0.0
 
 [node name="stars" parent="env/DirectionalLight3D" instance=ExtResource("5_id6vo")]
 transform = Transform3D(0.365518, 0.626039, 0.688819, 0.812359, -0.575813, 0.0922588, 0.454389, 0.525846, -0.719039, 1.23219, -1.03619, -0.798886)
+script = ExtResource("10_1wpiq")
+
+[node name="PlayerPhysics" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.43674, -0.000378937, -1.0398)
+input_ray_pickable = false
+lock_rotation = true
+script = ExtResource("10_3heva")
+
+[node name="CameraPivot" type="Node3D" parent="PlayerPhysics"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+
+[node name="PlayerCamera" type="Camera3D" parent="PlayerPhysics/CameraPivot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.0245087, 0.0248103)
+fov = 80.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PlayerPhysics"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+shape = SubResource("CapsuleShape3D_06sc3")
+
+[node name="GroundDetector" type="RayCast3D" parent="PlayerPhysics"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.268463, 0)
+target_position = Vector3(0, -0.5, 0)
